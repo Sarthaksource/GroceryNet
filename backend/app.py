@@ -6,15 +6,6 @@ from sql_connection import get_sql_connection
 
 app = Flask(__name__)
 
-@app.route("/testdb")
-def test_db():
-    try:
-        cnx = get_sql_connection()
-        return f"✅ Connected to DB: {cnx.database}"
-    except Exception as e:
-        return f"❌ Error: {str(e)}"
-
-
 @app.route("/manage_products", methods=["POST", "GET"])
 def manage_products():
 	cnx = get_sql_connection()
