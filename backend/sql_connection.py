@@ -8,9 +8,9 @@ def get_sql_connection():
     if __cnx is None:
         __cnx = mysql.connector.connect(
             host=os.environ.get("MYSQLHOST"),
-            port=os.environ.get("MYSQLPORT", 3306),
-            database=os.environ.get("MYSQLDATABASE"),
             user=os.environ.get("MYSQLUSER"),
-            password=os.environ.get("MYSQLPASSWORD")
+            password=os.environ.get("MYSQLPASSWORD"),
+            database=os.environ.get("MYSQLDATABASE"),
+            port=int(os.environ.get("MYSQLPORT", 3306))
         )
     return __cnx
