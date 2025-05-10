@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+	{% block title %}Dashboard{% endblock title %}
+	{% block navLink %}
+		<li class="nav-item">
+			<a class="nav-link active" aria-current="page" href="/">Dashboard</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" aria-current="page" href="/manage_products">Products</a>
+		</li>
+	{% endblock navLink %}	
+	{% block body %}
+	<div class="container mt-5">
+		<div class="heading d-flex justify-content-between">
+			<h2>Dashboard</h2>
+			<form action="" method="POST" class="userSelect d-flex gap-2">
+					<input list="customers" name="customer" placeholder="Select customer" class="form-control" required/>
+					<datalist id="customers">
+				  		{% for customer_name, customer_id in customers.items() %}
+							<option value={{ customer_name }}>
+						{% endfor %}
+					</datalist>
+					<button class="btn btn-primary text-nowrap">New Order</button>
+			</form>
+		</div>
+		<hr>
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Add New Customer</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form method="POST">
+							<div class="mb-3">
+								<label for="cname" class="col-form-label">Customer Name</label>
+								<input type="text" class="form-control" id="cname" name="cname" placeholder="Customer Name" required>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" name="action" value="cclose">Close</button>
+								<button type="submit" class="btn btn-primary" name="action" value="csave">Save</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% if orders|length %}
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th scope="col">Sno</th>
+					<th scope="col">Name</th>
+					<th scope="col">Quantity</th>
+					<th scope="col">Total Price</th>
+					<th scope="col">Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for order in orders %}
+				<tr>
+					<th>{{ loop.index }}</th>
+					<td>{{ order.customer_name }}</td>
+					<td>{{ order.date }}</td>
+					<td>{{ order.total_cost }}</td>
+					<td>
+						<a href="/dashboard/delete/{{ order.order_id }}"><button class="btn btn-outline-danger btn-sm bi bi-trash"></button></a>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>	
+		{% else %}
+		<div class="alert alert-secondary" role="alert">
+			No order found!
+		</div>
+		{% endif %}
+	</div>
+	{% endblock body %}

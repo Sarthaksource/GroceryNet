@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+	{% block title %}Manage Products{% endblock title %}
+	{% block navLink %}
+		<li class="nav-item">
+			<a class="nav-link" aria-current="page" href="/">Dashboard</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link active" aria-current="page" href="/manage_products">Products</a>
+		</li>
+	{% endblock navLink %}	
+	{% block body %}
+	<div class="container mt-5">
+		<h2>Manage Products</h2>
+		<hr>
+		<div class="d-flex gap-2 justify-content-md-end align-items-center mb-3">
+			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-plus-lg"></i></button>
+			<form class="d-flex" action="/manage_products" method="GET">
+				<input class="form-control me-2" type="search" placeholder="Search" name="searchTitle" aria-label="Search">
+				<button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+			</form>
+		</div>
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Add New Product</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form method="POST" action="/manage_products">
+							<div class="mb-3">
+								<label for="pname" class="col-form-label">Product Name</label>
+								<input type="text" class="form-control" id="pname" name="pname" placeholder="Product Name" required>
+							</div>
+							<div class="mb-3">
+								<label for="units" class="col-form-label">Unit</label>
+								<select id="units" name="units" class="form-control">
+									<option value="1">Each</option>
+									<option value="2" selected>Kg</option>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label for="ppu" class="col-form-label">Price Per Unit</label>
+								<input type="text" class="form-control" id="ppu" name="ppu" placeholder="Price Per Unit" required>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" name="action" value="close">Close</button>
+								<button type="submit" class="btn btn-primary" name="action" value="save">Save</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% if products|length %}
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th scope="col">Sno</th>
+						<th scope="col">Name</th>
+						<th scope="col">Unit</th>
+						<th scope="col">Price Per Unit</th>
+						<th scope="col">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for product in products %}
+						<tr>
+							<th>{{ loop.index }}</th>
+							<td>{{ product.name }}</td>
+							<td>{{ product.uom_name }}</td>
+							<td>{{ product.price_per_unit }}</td>
+							<td>
+								<a href="/manage_products/delete/{{ product.product_id }}"><button class="btn btn-outline-danger btn-sm bi bi-trash"></button></a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>			
+		{% else %}
+			<div class="alert alert-secondary" role="alert">
+				No products found!
+			</div>
+		{% endif %}
+	</div>
+	{% endblock body %}

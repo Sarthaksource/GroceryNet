@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}New Order{% endblock title %}
+	{% block navLink %}
+		<li class="nav-item">
+			<a class="nav-link" aria-current="page" href="/">Dashboard</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" aria-current="page" href="/manage_products">Products</a>
+		</li>
+	{% endblock navLink %}		
+	{% block body %}
+		<div class="container mt-5">
+			<div class="heading d-flex justify-content-between">
+				<h2>New Order</h2>
+			</div>
+			<hr>
+			<div class="d-flex justify-content-between">
+				<h4>{{ customer_name }}'s Orders</h4>
+				<button class="btn btn-primary mb-3" type="submit" data-bs-toggle="modal" data-bs-target="#addProduct">Add New Order</button>
+			</div>
+			<div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h1 class="modal-title fs-5" id="exampleModalLabel">Add New Customer</h1>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<form method="POST">
+								<div class="mb-3">
+									<label for="cname" class="col-form-label">Customer Name</label>
+									<input type="text" class="form-control" id="cname" name="cname" placeholder="Customer Name" required>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" name="action" value="cclose">Close</button>
+									<button type="submit" class="btn btn-primary" name="action" value="csave">Save</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="addProduct" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h1 class="modal-title fs-5" id="exampleModalLabel">Add New Order</h1>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<form method="POST">
+								<div class="mb-3">
+									<label for="pname" class="col-form-label">Product Name</label>
+									<select class="form-select" name="product" id="product" required>
+										<option value="" disabled selected>Select product</option>
+										{% for product in products %}
+											<option value="{{ product.product_id }}">{{ product.name }}</option>
+										{% endfor %}
+									</select>
+									<label for="quantity" class="col-form-label">Quantity</label>
+									<input type="text" class="form-control" id="quantity" name="quantity" placeholder="Quantity" required>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" name="action" value="oclose">Close</button>
+									<button type="submit" class="btn btn-primary" name="action" value="osave">Save</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% if orders|length %}
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th scope="col">Sno</th>
+							<th scope="col">Name</th>
+							<th scope="col">Quantity</th>
+							<th scope="col">Total Price</th>
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for order in orders %}
+							<tr>
+								<th>{{ loop.index }}</th>
+								<td>{{ order.name }}</td>
+								<td>{{ order.quantity }}</td>
+								<td>{{ order.total_price }}</td>
+								<td>
+									<a href="/new_order/delete/{{ customer_name }}/{{ order.order_id }}/{{ order.product_id }}/{{ order.quantity }}/{{ order.total_price }}"><button class="btn btn-outline-danger btn-sm bi bi-trash"></button></a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>	
+				<table class="table table-bordered mt-5">
+					<tr>
+						<th>
+							<div class="d-flex justify-content-between">
+								<h5>Total</h5>	
+								<h5>{{ final_total_price }}</h5>	
+							</div>
+						</th>
+					</tr>
+				</table>
+			{% else %}
+				<div class="alert alert-secondary" role="alert">
+					No order found!
+				</div>
+			{% endif %}
+		</div>
+	{% endblock body %}
